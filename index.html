@@ -1,0 +1,1897 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LanWord Beta 1 - The New Era of Local Word Processing</title>
+    
+    <!-- Fonts & Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    
+    <!-- MDUI -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/mdui@1.0.1/dist/css/mdui.min.css" />
+    
+    <style>
+        :root {
+            --primary-color: #2196F3;
+            --secondary-color: #03A9F4;
+            --accent-color: #00BCD4;
+            --glass-bg: rgba(255, 255, 255, 0.8);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            transition: var(--transition);
+        }
+        
+        .glass-panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 12px;
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--shadow);
+            padding: 20px;
+            transition: var(--transition);
+        }
+        
+        .app-container {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        
+        .app-header {
+            background: var(--primary-color);
+            color: white;
+            padding: 15px 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: var(--transition);
+        }
+        
+        .app-header h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .app-header h1 i {
+            font-size: 1.8rem;
+        }
+        
+        .header-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .header-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+        
+        .header-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        .app-content {
+            flex: 1;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            transition: var(--transition);
+        }
+        
+        .toolbar-group {
+            display: flex;
+            gap: 5px;
+            align-items: center;
+            padding-right: 15px;
+            border-right: 1px solid #eee;
+        }
+        
+        .toolbar-group:last-child {
+            border-right: none;
+        }
+        
+        .toolbar-btn {
+            background: none;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #555;
+        }
+        
+        .toolbar-btn:hover {
+            background: #f0f0f0;
+            transform: scale(1.05);
+        }
+        
+        .toolbar-btn.active {
+            background: var(--primary-color);
+            color: white;
+        }
+        
+        .editor-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            overflow: hidden;
+            transition: var(--transition);
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .editor-header {
+            padding: 15px 20px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .document-title {
+            font-size: 1.2rem;
+            font-weight: 500;
+            border: none;
+            background: transparent;
+            padding: 5px 10px;
+            border-radius: 4px;
+            width: 100%;
+            max-width: 300px;
+            transition: var(--transition);
+        }
+        
+        .document-title:focus {
+            outline: 2px solid var(--primary-color);
+            background: white;
+            box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
+        }
+        
+        .editor-body {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        
+        .editor {
+            min-height: 100%;
+            font-size: 16px;
+            line-height: 1.6;
+            outline: none;
+            transition: var(--transition);
+        }
+        
+        .editor:empty:before {
+            content: "Start typing your document here...";
+            color: #aaa;
+        }
+        
+        .editor-footer {
+            padding: 15px 20px;
+            border-top: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .status-info {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .home-container {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 20px;
+            height: calc(100vh - 80px);
+            animation: slideIn 0.5s ease;
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        
+        .sidebar {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            transition: var(--transition);
+        }
+        
+        .sidebar-header {
+            margin-bottom: 20px;
+        }
+        
+        .sidebar-title {
+            font-size: 1.2rem;
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
+        
+        .new-doc-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+            width: 100%;
+            justify-content: center;
+            transition: var(--transition);
+        }
+        
+        .new-doc-btn:hover {
+            background: var(--secondary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
+        }
+        
+        .search-box {
+            margin: 15px 0;
+            position: relative;
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 10px 15px 10px 40px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+        
+        .search-input:focus {
+            outline: 2px solid var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
+        }
+        
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #777;
+        }
+        
+        .documents-list {
+            flex: 1;
+            overflow-y: auto;
+        }
+        
+        .document-item {
+            padding: 12px 15px;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+            transition: var(--transition);
+            border-radius: 6px;
+            margin-bottom: 5px;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .document-item:hover {
+            background: #f5f5f5;
+            transform: translateX(5px);
+        }
+        
+        .document-item.active {
+            background: #e3f2fd;
+            border-left: 3px solid var(--primary-color);
+        }
+        
+        .document-name {
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+        
+        .document-meta {
+            font-size: 0.8rem;
+            color: #777;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .main-content {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .welcome-screen {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 40px;
+            animation: zoomIn 0.5s ease;
+        }
+        
+        @keyframes zoomIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        
+        .welcome-icon {
+            font-size: 4rem;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            animation: bounce 2s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+        
+        .welcome-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        
+        .welcome-subtitle {
+            font-size: 1rem;
+            color: #666;
+            max-width: 500px;
+            margin-bottom: 30px;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .action-btn {
+            padding: 12px 25px;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .primary-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+        }
+        
+        .primary-btn:hover {
+            background: var(--secondary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
+        }
+        
+        .secondary-btn {
+            background: white;
+            color: var(--primary-color);
+            border: 1px solid var(--primary-color);
+        }
+        
+        .secondary-btn:hover {
+            background: #f0f7ff;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(33, 150, 243, 0.1);
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            animation: modalSlideIn 0.3s ease;
+        }
+        
+        @keyframes modalSlideIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .modal-header {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+        
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #777;
+            transition: var(--transition);
+        }
+        
+        .close-btn:hover {
+            color: #333;
+            transform: rotate(90deg);
+        }
+        
+        .modal-body {
+            margin-bottom: 25px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+        
+        .form-input:focus {
+            outline: 2px solid var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
+        }
+        
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+        }
+        
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: var(--secondary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
+        }
+        
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+        }
+        
+        .btn-secondary:hover {
+            background: #e0e0e0;
+            transform: translateY(-2px);
+        }
+        
+        .bottom-sheet {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: white;
+            border-radius: 12px 12px 0 0;
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.1);
+            z-index: 100;
+            transform: translateY(100%);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .bottom-sheet.open {
+            transform: translateY(0);
+        }
+        
+        .bottom-sheet-header {
+            padding: 15px 20px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .bottom-sheet-title {
+            font-weight: 500;
+        }
+        
+        .bottom-sheet-body {
+            padding: 20px;
+            max-height: 60vh;
+            overflow-y: auto;
+        }
+        
+        .format-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 10px;
+        }
+        
+        .format-option {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            padding: 15px 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .format-option:hover {
+            background: #f5f5f5;
+            transform: scale(1.05);
+        }
+        
+        .format-icon {
+            font-size: 1.5rem;
+            color: #555;
+        }
+        
+        .format-label {
+            font-size: 0.8rem;
+            text-align: center;
+        }
+        
+        .countify-modal .modal-content {
+            max-width: 400px;
+            text-align: center;
+        }
+        
+        .countify-icon {
+            font-size: 3rem;
+            color: var(--accent-color);
+            margin-bottom: 15px;
+        }
+        
+        .countify-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .countify-description {
+            color: #666;
+            margin-bottom: 25px;
+        }
+        
+        .countify-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+        
+        .processing-animation {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-left-color: var(--primary-color);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .color-picker {
+            display: none;
+            position: absolute;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            z-index: 100;
+            animation: fadeIn 0.2s ease;
+        }
+        
+        .color-option {
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            margin: 5px;
+            cursor: pointer;
+            display: inline-block;
+            transition: var(--transition);
+        }
+        
+        .color-option:hover {
+            transform: scale(1.2);
+        }
+        
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #333;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 4px;
+            z-index: 1000;
+            font-size: 0.9rem;
+            animation: toastSlideIn 0.3s ease;
+        }
+        
+        @keyframes toastSlideIn {
+            from { opacity: 0; transform: translateX(-50%) translateY(20px); }
+            to { opacity: 1; transform: translateX(-50%) translateY(0); }
+        }
+        
+        .context-menu {
+            position: fixed;
+            background: white;
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            z-index: 1000;
+            display: none;
+            animation: fadeIn 0.2s ease;
+        }
+        
+        .context-menu-item {
+            padding: 10px 15px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .context-menu-item:hover {
+            background: #f5f5f5;
+        }
+        
+        .context-menu-item:first-child {
+            border-radius: 6px 6px 0 0;
+        }
+        
+        .context-menu-item:last-child {
+            border-radius: 0 0 6px 6px;
+        }
+        
+        .theme-toggle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--primary-color);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: var(--transition);
+            z-index: 99;
+        }
+        
+        .theme-toggle:hover {
+            transform: scale(1.1);
+        }
+        
+        .dark-mode {
+            --primary-color: #1976D2;
+            --secondary-color: #0288D1;
+            --accent-color: #0097A7;
+            --glass-bg: rgba(30, 30, 30, 0.8);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: #f5f5f5;
+        }
+        
+        .dark-mode .glass-panel {
+            background: var(--glass-bg);
+            color: #f5f5f5;
+        }
+        
+        .dark-mode .toolbar,
+        .dark-mode .editor-container,
+        .dark-mode .sidebar,
+        .dark-mode .main-content,
+        .dark-mode .modal-content,
+        .dark-mode .bottom-sheet,
+        .dark-mode .color-picker,
+        .dark-mode .context-menu {
+            background: #2d2d2d;
+            color: #f5f5f5;
+            border-color: #444;
+        }
+        
+        .dark-mode .toolbar-btn {
+            color: #ddd;
+        }
+        
+        .dark-mode .toolbar-btn:hover {
+            background: #444;
+        }
+        
+        .dark-mode .toolbar-btn.active {
+            background: var(--primary-color);
+            color: white;
+        }
+        
+        .dark-mode .search-input,
+        .dark-mode .document-title,
+        .dark-mode .form-input {
+            background: #333;
+            color: #f5f5f5;
+            border-color: #555;
+        }
+        
+        .dark-mode .document-item:hover {
+            background: #444;
+        }
+        
+        .dark-mode .document-item.active {
+            background: rgba(25, 118, 210, 0.2);
+        }
+        
+        .dark-mode .editor {
+            color: #f5f5f5;
+        }
+        
+        .dark-mode .editor:empty:before {
+            color: #888;
+        }
+        
+        @media (max-width: 768px) {
+            .home-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                display: none;
+            }
+            
+            .toolbar {
+                overflow-x: auto;
+            }
+            
+            .toolbar-group {
+                flex-shrink: 0;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+                width: 100%;
+            }
+            
+            .action-btn {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .header-actions {
+                display: none;
+            }
+            
+            .modal-content {
+                width: 95%;
+                padding: 20px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .app-content {
+                padding: 10px;
+            }
+            
+            .editor-header {
+                flex-direction: column;
+                gap: 10px;
+                align-items: flex-start;
+            }
+            
+            .editor-footer {
+                flex-direction: column;
+                gap: 10px;
+                align-items: flex-start;
+            }
+            
+            .status-info {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .format-options {
+                grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <header class="app-header">
+            <h1><i class="fas fa-feather-alt"></i> LanWord Beta 1</h1>
+            <div class="header-actions">
+                <button class="header-btn" id="toggle-home">
+                    <i class="fas fa-home"></i> Home
+                </button>
+                <button class="header-btn" id="export-doc">
+                    <i class="fas fa-download"></i> Export
+                </button>
+            </div>
+        </header>
+        
+        <div class="app-content">
+            <!-- Home Screen -->
+            <div id="home-screen" class="home-container">
+                <div class="sidebar">
+                    <div class="sidebar-header">
+                        <h2 class="sidebar-title">Documents</h2>
+                        <button class="new-doc-btn" id="new-doc-btn">
+                            <i class="fas fa-plus"></i> New Document
+                        </button>
+                    </div>
+                    
+                    <div class="search-box">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" class="search-input" id="search-input" placeholder="Search documents...">
+                    </div>
+                    
+                    <div class="documents-list" id="documents-list">
+                        <!-- Documents will be populated here -->
+                    </div>
+                </div>
+                
+                <div class="main-content">
+                    <div class="welcome-screen" id="welcome-screen">
+                        <div class="welcome-icon">
+                            <i class="fas fa-feather-alt"></i>
+                        </div>
+                        <h2 class="welcome-title">Welcome to LanWord Beta 1</h2>
+                        <p class="welcome-subtitle">
+                            The new era of local word processing. Write, edit, and manage documents offline with a clean, distraction-free interface.
+                        </p>
+                        <div class="action-buttons">
+                            <button class="action-btn primary-btn" id="create-doc-btn">
+                                <i class="fas fa-plus"></i> Create New Document
+                            </button>
+                            <button class="action-btn secondary-btn" id="import-doc-btn">
+                                <i class="fas fa-file-import"></i> Import Document
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div id="editor-screen" class="editor-container" style="display: none;">
+                        <div class="editor-header">
+                            <input type="text" class="document-title" id="document-title" placeholder="Untitled Document">
+                            <div>
+                                <button class="toolbar-btn" id="save-doc-btn" title="Save">
+                                    <i class="fas fa-save"></i>
+                                </button>
+                                <button class="toolbar-btn" id="countify-btn" title="Analyze in Countify+">
+                                    <i class="fas fa-chart-bar"></i>
+                                </button>
+                                <button class="toolbar-btn" id="close-doc-btn" title="Close Document">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="toolbar">
+                            <div class="toolbar-group">
+                                <button class="toolbar-btn" data-command="bold" title="Bold">
+                                    <i class="fas fa-bold"></i>
+                                </button>
+                                <button class="toolbar-btn" data-command="italic" title="Italic">
+                                    <i class="fas fa-italic"></i>
+                                </button>
+                                <button class="toolbar-btn" data-command="underline" title="Underline">
+                                    <i class="fas fa-underline"></i>
+                                </button>
+                                <button class="toolbar-btn" data-command="strikeThrough" title="Strikethrough">
+                                    <i class="fas fa-strikethrough"></i>
+                                </button>
+                            </div>
+                            
+                            <div class="toolbar-group">
+                                <button class="toolbar-btn" data-command="formatBlock" data-value="h1" title="Heading 1">
+                                    H1
+                                </button>
+                                <button class="toolbar-btn" data-command="formatBlock" data-value="h2" title="Heading 2">
+                                    H2
+                                </button>
+                                <button class="toolbar-btn" data-command="formatBlock" data-value="p" title="Paragraph">
+                                    P
+                                </button>
+                                <button class="toolbar-btn" data-command="formatBlock" data-value="blockquote" title="Quote">
+                                    <i class="fas fa-quote-right"></i>
+                                </button>
+                            </div>
+                            
+                            <div class="toolbar-group">
+                                <button class="toolbar-btn" data-command="justifyLeft" title="Align Left">
+                                    <i class="fas fa-align-left"></i>
+                                </button>
+                                <button class="toolbar-btn" data-command="justifyCenter" title="Align Center">
+                                    <i class="fas fa-align-center"></i>
+                                </button>
+                                <button class="toolbar-btn" data-command="justifyRight" title="Align Right">
+                                    <i class="fas fa-align-right"></i>
+                                </button>
+                                <button class="toolbar-btn" data-command="justifyFull" title="Justify">
+                                    <i class="fas fa-align-justify"></i>
+                                </button>
+                            </div>
+                            
+                            <div class="toolbar-group">
+                                <button class="toolbar-btn" data-command="insertUnorderedList" title="Bullet List">
+                                    <i class="fas fa-list-ul"></i>
+                                </button>
+                                <button class="toolbar-btn" data-command="insertOrderedList" title="Numbered List">
+                                    <i class="fas fa-list-ol"></i>
+                                </button>
+                                <button class="toolbar-btn" id="insert-link-btn" title="Insert Link">
+                                    <i class="fas fa-link"></i>
+                                </button>
+                                <button class="toolbar-btn" id="insert-hr-btn" title="Insert Horizontal Line">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                            </div>
+                            
+                            <div class="toolbar-group">
+                                <button class="toolbar-btn" id="font-family-btn" title="Font Family">
+                                    <i class="fas fa-font"></i>
+                                </button>
+                                <button class="toolbar-btn" id="font-size-btn" title="Font Size">
+                                    <i class="fas fa-text-height"></i>
+                                </button>
+                                <button class="toolbar-btn" id="text-color-btn" title="Text Color">
+                                    <i class="fas fa-palette"></i>
+                                </button>
+                                <button class="toolbar-btn" data-command="removeFormat" title="Clear Formatting">
+                                    <i class="fas fa-eraser"></i>
+                                </button>
+                            </div>
+                            
+                            <div class="toolbar-group">
+                                <button class="toolbar-btn" data-command="undo" title="Undo">
+                                    <i class="fas fa-undo"></i>
+                                </button>
+                                <button class="toolbar-btn" data-command="redo" title="Redo">
+                                    <i class="fas fa-redo"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="editor-body">
+                            <div class="editor" id="editor" contenteditable="true"></div>
+                        </div>
+                        
+                        <div class="editor-footer">
+                            <div class="status-info">
+                                <span id="word-count">Words: 0</span>
+                                <span id="char-count">Characters: 0</span>
+                            </div>
+                            <div>
+                                <span id="last-saved">Last saved: Never</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Format Options Bottom Sheet -->
+    <div class="bottom-sheet" id="format-sheet">
+        <div class="bottom-sheet-header">
+            <h3 class="bottom-sheet-title">Format Options</h3>
+            <button class="close-btn" id="close-format-sheet">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="bottom-sheet-body">
+            <div class="format-options">
+                <div class="format-option" data-command="bold">
+                    <i class="fas fa-bold format-icon"></i>
+                    <span class="format-label">Bold</span>
+                </div>
+                <div class="format-option" data-command="italic">
+                    <i class="fas fa-italic format-icon"></i>
+                    <span class="format-label">Italic</span>
+                </div>
+                <div class="format-option" data-command="underline">
+                    <i class="fas fa-underline format-icon"></i>
+                    <span class="format-label">Underline</span>
+                </div>
+                <div class="format-option" data-command="strikeThrough">
+                    <i class="fas fa-strikethrough format-icon"></i>
+                    <span class="format-label">Strikethrough</span>
+                </div>
+                <div class="format-option" data-command="formatBlock" data-value="h1">
+                    <i class="fas fa-heading format-icon"></i>
+                    <span class="format-label">Heading 1</span>
+                </div>
+                <div class="format-option" data-command="formatBlock" data-value="h2">
+                    <i class="fas fa-heading format-icon"></i>
+                    <span class="format-label">Heading 2</span>
+                </div>
+                <div class="format-option" data-command="formatBlock" data-value="blockquote">
+                    <i class="fas fa-quote-right format-icon"></i>
+                    <span class="format-label">Quote</span>
+                </div>
+                <div class="format-option" data-command="insertUnorderedList">
+                    <i class="fas fa-list-ul format-icon"></i>
+                    <span class="format-label">Bullet List</span>
+                </div>
+                <div class="format-option" data-command="insertOrderedList">
+                    <i class="fas fa-list-ol format-icon"></i>
+                    <span class="format-label">Numbered List</span>
+                </div>
+                <div class="format-option" id="text-color-option">
+                    <i class="fas fa-palette format-icon"></i>
+                    <span class="format-label">Text Color</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- New Document Modal -->
+    <div class="modal" id="new-doc-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Create New Document</h3>
+                <button class="close-btn" id="close-new-doc-modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label" for="new-doc-name">Document Name</label>
+                    <input type="text" class="form-input" id="new-doc-name" placeholder="Enter document name">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancel-new-doc">Cancel</button>
+                <button class="btn btn-primary" id="create-new-doc">Create</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Countify+ Modal -->
+    <div class="modal countify-modal" id="countify-modal">
+        <div class="modal-content">
+            <div class="countify-icon">
+                <i class="fas fa-chart-bar"></i>
+            </div>
+            <h3 class="countify-title">Analyze in Countify+</h3>
+            <p class="countify-description">
+                Do you want to redirect to Countify+ to analyze this text?
+            </p>
+            <div class="countify-buttons">
+                <button class="btn btn-secondary" id="countify-cancel">No</button>
+                <button class="btn btn-primary" id="countify-confirm">Yes</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Processing Animation -->
+    <div class="modal" id="processing-modal">
+        <div class="modal-content">
+            <div class="processing-animation" id="processing-animation">
+                <div class="spinner"></div>
+                <p>Processing your document for Countify+...</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Color Picker -->
+    <div class="color-picker" id="color-picker">
+        <div class="color-option" style="background-color: #000000;" data-color="#000000"></div>
+        <div class="color-option" style="background-color: #ff0000;" data-color="#ff0000"></div>
+        <div class="color-option" style="background-color: #00ff00;" data-color="#00ff00"></div>
+        <div class="color-option" style="background-color: #0000ff;" data-color="#0000ff"></div>
+        <div class="color-option" style="background-color: #ffff00;" data-color="#ffff00"></div>
+        <div class="color-option" style="background-color: #ff00ff;" data-color="#ff00ff"></div>
+        <div class="color-option" style="background-color: #00ffff;" data-color="#00ffff"></div>
+        <div class="color-option" style="background-color: #ffa500;" data-color="#ffa500"></div>
+        <div class="color-option" style="background-color: #800080;" data-color="#800080"></div>
+        <div class="color-option" style="background-color: #008000;" data-color="#008000"></div>
+    </div>
+    
+    <!-- Context Menu -->
+    <div class="context-menu" id="context-menu">
+        <div class="context-menu-item" id="context-rename">
+            <i class="fas fa-edit"></i> Rename
+        </div>
+        <div class="context-menu-item" id="context-delete">
+            <i class="fas fa-trash"></i> Delete
+        </div>
+        <div class="context-menu-item" id="context-export">
+            <i class="fas fa-download"></i> Export
+        </div>
+    </div>
+    
+    <!-- Theme Toggle -->
+    <div class="theme-toggle" id="theme-toggle">
+        <i class="fas fa-moon" id="theme-icon"></i>
+    </div>
+    
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/mdui@1.0.1/dist/js/mdui.min.js"></script>
+    <script>
+        // Document Management
+        class DocumentManager {
+            constructor() {
+                this.documents = JSON.parse(localStorage.getItem('lanword-documents')) || [];
+                this.currentDocument = null;
+                this.autoSaveInterval = null;
+                
+                // Initialize with sample documents if empty
+                if (this.documents.length === 0) {
+                    this.createDocument('Welcome to LanWord', '<h1>Welcome to LanWord Beta 1</h1><p>This is your first document. Start typing to create your content!</p>');
+                    this.createDocument('Sample Document', '<h2>Sample Document</h2><p>This is a sample document to demonstrate LanWord\'s features.</p><ul><li>Rich text editing</li><li>Document management</li><li>Export capabilities</li></ul>');
+                }
+            }
+            
+            // Create a new document
+            createDocument(name = 'Untitled Document', content = '') {
+                const id = 'doc_' + Date.now();
+                const document = {
+                    id,
+                    name,
+                    content,
+                    createdAt: new Date().toISOString(),
+                    updatedAt: new Date().toISOString(),
+                    wordCount: 0,
+                    charCount: 0
+                };
+                
+                this.documents.unshift(document);
+                this.saveToStorage();
+                return document;
+            }
+            
+            // Update document content
+            updateDocument(id, content, name = null) {
+                const document = this.documents.find(doc => doc.id === id);
+                if (document) {
+                    document.content = content;
+                    document.updatedAt = new Date().toISOString();
+                    
+                    // Calculate word and character counts
+                    const textContent = content.replace(/<[^>]*>/g, '');
+                    document.wordCount = textContent.trim() ? textContent.trim().split(/\s+/).length : 0;
+                    document.charCount = textContent.length;
+                    
+                    if (name) {
+                        document.name = name;
+                    }
+                    
+                    this.saveToStorage();
+                    return document;
+                }
+                return null;
+            }
+            
+            // Delete a document
+            deleteDocument(id) {
+                this.documents = this.documents.filter(doc => doc.id !== id);
+                this.saveToStorage();
+            }
+            
+            // Get document by ID
+            getDocument(id) {
+                return this.documents.find(doc => doc.id === id);
+            }
+            
+            // Search documents
+            searchDocuments(query) {
+                if (!query) return this.documents;
+                
+                const lowerQuery = query.toLowerCase();
+                return this.documents.filter(doc => 
+                    doc.name.toLowerCase().includes(lowerQuery) || 
+                    doc.content.toLowerCase().includes(lowerQuery)
+                );
+            }
+            
+            // Save to localStorage
+            saveToStorage() {
+                localStorage.setItem('lanword-documents', JSON.stringify(this.documents));
+            }
+            
+            // Export document as text
+            exportAsText(document) {
+                const textContent = document.content.replace(/<[^>]*>/g, '');
+                const blob = new Blob([textContent], { type: 'text/plain' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `${document.name}.txt`;
+                a.click();
+                URL.revokeObjectURL(url);
+            }
+            
+            // Export document as HTML
+            exportAsHTML(document) {
+                const htmlContent = `
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>${document.name}</title>
+    <style>
+        body { font-family: 'Poppins', sans-serif; line-height: 1.6; padding: 20px; max-width: 800px; margin: 0 auto; }
+    </style>
+</head>
+<body>
+    ${document.content}
+</body>
+</html>`;
+                const blob = new Blob([htmlContent], { type: 'text/html' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `${document.name}.html`;
+                a.click();
+                URL.revokeObjectURL(url);
+            }
+            
+            // Import document from file
+            importDocument(file, callback) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const content = e.target.result;
+                    const name = file.name.replace(/\.[^/.]+$/, ""); // Remove extension
+                    const document = this.createDocument(name);
+                    document.content = content;
+                    this.updateDocument(document.id, content);
+                    if (callback) callback(document);
+                };
+                reader.readAsText(file);
+            }
+        }
+
+        // UI Controller
+        class UIController {
+            constructor(documentManager) {
+                this.documentManager = documentManager;
+                this.contextMenuDocument = null;
+                this.init();
+            }
+            
+            init() {
+                this.bindEvents();
+                this.renderDocuments();
+                this.setupAutoSave();
+                this.applySavedTheme();
+            }
+            
+            bindEvents() {
+                // Home screen buttons
+                this.getElement('new-doc-btn').addEventListener('click', () => this.showNewDocumentModal());
+                this.getElement('create-doc-btn').addEventListener('click', () => this.showNewDocumentModal());
+                
+                // Modal buttons
+                this.getElement('close-new-doc-modal').addEventListener('click', () => this.hideNewDocumentModal());
+                this.getElement('cancel-new-doc').addEventListener('click', () => this.hideNewDocumentModal());
+                this.getElement('create-new-doc').addEventListener('click', () => this.createNewDocument());
+                
+                // Editor buttons
+                this.getElement('close-doc-btn').addEventListener('click', () => this.closeDocument());
+                this.getElement('save-doc-btn').addEventListener('click', () => this.saveCurrentDocument());
+                this.getElement('countify-btn').addEventListener('click', () => this.showCountifyModal());
+                
+                // Countify modal buttons
+                this.getElement('countify-cancel').addEventListener('click', () => this.hideCountifyModal());
+                this.getElement('countify-confirm').addEventListener('click', () => this.redirectToCountify());
+                
+                // Search
+                this.getElement('search-input').addEventListener('input', (e) => this.searchDocuments(e.target.value));
+                
+                // Format buttons
+                document.querySelectorAll('.toolbar-btn[data-command]').forEach(btn => {
+                    btn.addEventListener('click', () => this.executeCommand(
+                        btn.getAttribute('data-command'),
+                        btn.getAttribute('data-value')
+                    ));
+                });
+                
+                // Editor events
+                this.getElement('editor').addEventListener('input', () => this.updateWordCount());
+                this.getElement('document-title').addEventListener('change', () => this.updateDocumentTitle());
+                this.getElement('document-title').addEventListener('blur', () => this.updateDocumentTitle());
+                
+                // Bottom sheet
+                this.getElement('close-format-sheet').addEventListener('click', () => this.hideFormatSheet());
+                document.querySelectorAll('.format-option').forEach(option => {
+                    option.addEventListener('click', () => {
+                        const command = option.getAttribute('data-command');
+                        const value = option.getAttribute('data-value');
+                        this.executeCommand(command, value);
+                        this.hideFormatSheet();
+                    });
+                });
+                
+                // Header buttons
+                this.getElement('toggle-home').addEventListener('click', () => this.closeDocument());
+                this.getElement('export-doc').addEventListener('click', () => this.exportCurrentDocument());
+                
+                // Import document
+                this.getElement('import-doc-btn').addEventListener('click', () => this.importDocument());
+                
+                // Insert link
+                this.getElement('insert-link-btn').addEventListener('click', () => this.insertLink());
+                
+                // Insert horizontal line
+                this.getElement('insert-hr-btn').addEventListener('click', () => this.executeCommand('insertHorizontalRule'));
+                
+                // Text color
+                this.getElement('text-color-btn').addEventListener('click', (e) => this.showColorPicker(e));
+                this.getElement('text-color-option').addEventListener('click', () => this.showColorPicker());
+                
+                // Color picker options
+                document.querySelectorAll('.color-option').forEach(option => {
+                    option.addEventListener('click', () => {
+                        const color = option.getAttribute('data-color');
+                        this.executeCommand('foreColor', color);
+                        this.hideColorPicker();
+                    });
+                });
+                
+                // Context menu
+                this.getElement('context-rename').addEventListener('click', () => this.renameDocument());
+                this.getElement('context-delete').addEventListener('click', () => this.deleteDocument());
+                this.getElement('context-export').addEventListener('click', () => this.exportDocument());
+                
+                // Theme toggle
+                this.getElement('theme-toggle').addEventListener('click', () => this.toggleTheme());
+                
+                // Keyboard shortcuts
+                document.addEventListener('keydown', (e) => {
+                    if (e.ctrlKey || e.metaKey) {
+                        switch(e.key) {
+                            case 's':
+                                e.preventDefault();
+                                this.saveCurrentDocument();
+                                break;
+                            case 'b':
+                                e.preventDefault();
+                                this.executeCommand('bold');
+                                break;
+                            case 'i':
+                                e.preventDefault();
+                                this.executeCommand('italic');
+                                break;
+                            case 'u':
+                                e.preventDefault();
+                                this.executeCommand('underline');
+                                break;
+                            case 'z':
+                                if (e.shiftKey) {
+                                    this.executeCommand('redo');
+                                } else {
+                                    this.executeCommand('undo');
+                                }
+                                e.preventDefault();
+                                break;
+                            case 'n':
+                                e.preventDefault();
+                                this.showNewDocumentModal();
+                                break;
+                        }
+                    }
+                });
+                
+                // Close modals when clicking outside
+                document.addEventListener('click', (e) => {
+                    if (e.target.classList.contains('modal')) {
+                        e.target.style.display = 'none';
+                    }
+                    
+                    // Hide context menu
+                    if (!e.target.closest('.context-menu')) {
+                        this.hideContextMenu();
+                    }
+                    
+                    // Hide color picker
+                    if (!e.target.closest('.color-picker') && !e.target.closest('#text-color-btn') && !e.target.closest('#text-color-option')) {
+                        this.hideColorPicker();
+                    }
+                });
+                
+                // Close context menu on scroll
+                document.addEventListener('scroll', () => this.hideContextMenu());
+            }
+            
+            // Safe DOM element getter
+            getElement(id) {
+                const element = document.getElementById(id);
+                if (!element) {
+                    console.error(`Element with id '${id}' not found`);
+                    throw new Error(`Element with id '${id}' not found`);
+                }
+                return element;
+            }
+            
+            showNewDocumentModal() {
+                this.getElement('new-doc-modal').style.display = 'flex';
+                this.getElement('new-doc-name').value = '';
+                this.getElement('new-doc-name').focus();
+            }
+            
+            hideNewDocumentModal() {
+                this.getElement('new-doc-modal').style.display = 'none';
+            }
+            
+            createNewDocument() {
+                const name = this.getElement('new-doc-name').value.trim() || 'Untitled Document';
+                const document = this.documentManager.createDocument(name);
+                this.hideNewDocumentModal();
+                this.openDocument(document);
+            }
+            
+            renderDocuments(filteredDocuments = null) {
+                const documentsList = this.getElement('documents-list');
+                const documents = filteredDocuments || this.documentManager.documents;
+                
+                if (documents.length === 0) {
+                    documentsList.innerHTML = '<p style="text-align: center; color: #777; padding: 20px;">No documents yet</p>';
+                    return;
+                }
+                
+                documentsList.innerHTML = documents.map(doc => `
+                    <div class="document-item ${this.documentManager.currentDocument?.id === doc.id ? 'active' : ''}" data-id="${doc.id}">
+                        <div class="document-name">${doc.name}</div>
+                        <div class="document-meta">
+                            <span>${new Date(doc.updatedAt).toLocaleDateString()}</span>
+                            <span>${doc.wordCount} words</span>
+                        </div>
+                    </div>
+                `).join('');
+                
+                // Add click events to document items
+                documentsList.querySelectorAll('.document-item').forEach(item => {
+                    item.addEventListener('click', () => {
+                        const docId = item.getAttribute('data-id');
+                        const document = this.documentManager.getDocument(docId);
+                        if (document) {
+                            this.openDocument(document);
+                        }
+                    });
+                    
+                    // Add context menu for document actions
+                    item.addEventListener('contextmenu', (e) => {
+                        e.preventDefault();
+                        const docId = item.getAttribute('data-id');
+                        this.contextMenuDocument = this.documentManager.getDocument(docId);
+                        this.showContextMenu(e);
+                    });
+                });
+            }
+            
+            openDocument(document) {
+                this.documentManager.currentDocument = document;
+                
+                // Update UI
+                this.getElement('home-screen').style.display = 'grid';
+                this.getElement('welcome-screen').style.display = 'none';
+                this.getElement('editor-screen').style.display = 'flex';
+                this.getElement('document-title').value = document.name;
+                this.getElement('editor').innerHTML = document.content;
+                
+                // Update word count
+                this.updateWordCount();
+                
+                // Update last saved
+                this.getElement('last-saved').textContent = `Last saved: ${new Date(document.updatedAt).toLocaleString()}`;
+                
+                // Re-render documents to update active state
+                this.renderDocuments();
+            }
+            
+            closeDocument() {
+                // Save current document before closing
+                if (this.documentManager.currentDocument) {
+                    this.saveCurrentDocument();
+                }
+                
+                this.documentManager.currentDocument = null;
+                this.getElement('home-screen').style.display = 'grid';
+                this.getElement('welcome-screen').style.display = 'flex';
+                this.getElement('editor-screen').style.display = 'none';
+                this.renderDocuments();
+            }
+            
+            saveCurrentDocument() {
+                if (!this.documentManager.currentDocument) return;
+                
+                const content = this.getElement('editor').innerHTML;
+                const name = this.getElement('document-title').value;
+                
+                this.documentManager.updateDocument(
+                    this.documentManager.currentDocument.id, 
+                    content, 
+                    name
+                );
+                
+                this.getElement('last-saved').textContent = `Last saved: ${new Date().toLocaleString()}`;
+                
+                // Show save confirmation
+                this.showToast('Document saved successfully');
+            }
+            
+            updateDocumentTitle() {
+                if (!this.documentManager.currentDocument) return;
+                
+                const name = this.getElement('document-title').value;
+                if (name && name !== this.documentManager.currentDocument.name) {
+                    this.documentManager.currentDocument.name = name;
+                    this.documentManager.saveToStorage();
+                    this.renderDocuments();
+                }
+            }
+            
+            updateWordCount() {
+                if (!this.documentManager.currentDocument) return;
+                
+                const textContent = this.getElement('editor').innerText;
+                const wordCount = textContent.trim() ? textContent.trim().split(/\s+/).length : 0;
+                const charCount = textContent.length;
+                
+                this.getElement('word-count').textContent = `Words: ${wordCount}`;
+                this.getElement('char-count').textContent = `Characters: ${charCount}`;
+            }
+            
+            searchDocuments(query) {
+                const results = this.documentManager.searchDocuments(query);
+                this.renderDocuments(results);
+            }
+            
+            executeCommand(command, value = null) {
+                this.getElement('editor').focus();
+                
+                try {
+                    if (value) {
+                        document.execCommand(command, false, value);
+                    } else {
+                        document.execCommand(command, false, null);
+                    }
+                } catch (e) {
+                    console.error('Error executing command:', e);
+                }
+                
+                // Update word count after formatting changes
+                this.updateWordCount();
+            }
+            
+            showCountifyModal() {
+                this.getElement('countify-modal').style.display = 'flex';
+            }
+            
+            hideCountifyModal() {
+                this.getElement('countify-modal').style.display = 'none';
+            }
+            
+            redirectToCountify() {
+                const content = this.getElement('editor').innerText;
+                
+                // Show processing animation
+                this.getElement('processing-animation').style.display = 'block';
+                this.getElement('countify-modal').style.display = 'none';
+                
+                // Simulate processing delay
+                setTimeout(() => {
+                    // Encode the content for URL transmission
+                    const encodedContent = btoa(unescape(encodeURIComponent(content)));
+                    
+                    // In a real implementation, this would redirect to Countify+ with the data
+                    // For now, we'll simulate the behavior
+                    this.showToast('Redirecting to Countify+...');
+                    
+                    // Simulate the redirect (commented out for safety)
+                    // window.location.href = `https://countify.landecs.org?text=${encodedContent}`;
+                    
+                    this.getElement('processing-animation').style.display = 'none';
+                    
+                    // Show a message that this is a simulation
+                    setTimeout(() => {
+                        this.showToast('In a real implementation, this would redirect to Countify+ with your text');
+                    }, 1000);
+                }, 1500);
+            }
+            
+            showFormatSheet() {
+                this.getElement('format-sheet').classList.add('open');
+            }
+            
+            hideFormatSheet() {
+                this.getElement('format-sheet').classList.remove('open');
+            }
+            
+            showColorPicker(event = null) {
+                const colorPicker = this.getElement('color-picker');
+                colorPicker.style.display = 'block';
+                
+                if (event) {
+                    colorPicker.style.top = `${event.clientY}px`;
+                    colorPicker.style.left = `${event.clientX}px`;
+                } else {
+                    colorPicker.style.top = '50%';
+                    colorPicker.style.left = '50%';
+                    colorPicker.style.transform = 'translate(-50%, -50%)';
+                }
+            }
+            
+            hideColorPicker() {
+                this.getElement('color-picker').style.display = 'none';
+            }
+            
+            setupAutoSave() {
+                // Auto-save every 30 seconds
+                setInterval(() => {
+                    if (this.documentManager.currentDocument) {
+                        this.saveCurrentDocument();
+                    }
+                }, 30000);
+            }
+            
+            exportCurrentDocument() {
+                if (!this.documentManager.currentDocument) {
+                    this.showToast('No document to export');
+                    return;
+                }
+                
+                const format = confirm('Export as HTML? Click OK for HTML, Cancel for TXT.') ? 'html' : 'txt';
+                
+                if (format === 'html') {
+                    this.documentManager.exportAsHTML(this.documentManager.currentDocument);
+                } else {
+                    this.documentManager.exportAsText(this.documentManager.currentDocument);
+                }
+                
+                this.showToast(`Document exported as ${format.toUpperCase()}`);
+            }
+            
+            importDocument() {
+                const input = document.createElement('input');
+                input.type = 'file';
+                input.accept = '.txt,.html,.doc,.docx';
+                
+                input.onchange = (e) => {
+                    const file = e.target.files[0];
+                    if (file) {
+                        this.documentManager.importDocument(file, (document) => {
+                            this.showToast('Document imported successfully');
+                            this.openDocument(document);
+                        });
+                    }
+                };
+                
+                input.click();
+            }
+            
+            insertLink() {
+                const url = prompt('Enter the URL:');
+                if (url) {
+                    this.executeCommand('createLink', url);
+                }
+            }
+            
+            showContextMenu(e) {
+                const contextMenu = this.getElement('context-menu');
+                contextMenu.style.display = 'block';
+                contextMenu.style.top = `${e.clientY}px`;
+                contextMenu.style.left = `${e.clientX}px`;
+            }
+            
+            hideContextMenu() {
+                this.getElement('context-menu').style.display = 'none';
+            }
+            
+            renameDocument() {
+                if (!this.contextMenuDocument) return;
+                
+                const newName = prompt('Enter new document name:', this.contextMenuDocument.name);
+                if (newName && newName.trim() !== '') {
+                    this.contextMenuDocument.name = newName.trim();
+                    this.documentManager.saveToStorage();
+                    this.renderDocuments();
+                    this.hideContextMenu();
+                    this.showToast('Document renamed successfully');
+                }
+            }
+            
+            deleteDocument() {
+                if (!this.contextMenuDocument) return;
+                
+                if (confirm('Are you sure you want to delete this document?')) {
+                    this.documentManager.deleteDocument(this.contextMenuDocument.id);
+                    this.renderDocuments();
+                    if (this.documentManager.currentDocument?.id === this.contextMenuDocument.id) {
+                        this.closeDocument();
+                    }
+                    this.hideContextMenu();
+                    this.showToast('Document deleted successfully');
+                }
+            }
+            
+            exportDocument() {
+                if (!this.contextMenuDocument) return;
+                
+                const format = confirm('Export as HTML? Click OK for HTML, Cancel for TXT.') ? 'html' : 'txt';
+                
+                if (format === 'html') {
+                    this.documentManager.exportAsHTML(this.contextMenuDocument);
+                } else {
+                    this.documentManager.exportAsText(this.contextMenuDocument);
+                }
+                
+                this.hideContextMenu();
+                this.showToast(`Document exported as ${format.toUpperCase()}`);
+            }
+            
+            toggleTheme() {
+                const body = document.body;
+                const themeIcon = this.getElement('theme-icon');
+                
+                if (body.classList.contains('dark-mode')) {
+                    body.classList.remove('dark-mode');
+                    themeIcon.classList.remove('fa-sun');
+                    themeIcon.classList.add('fa-moon');
+                    localStorage.setItem('lanword-theme', 'light');
+                } else {
+                    body.classList.add('dark-mode');
+                    themeIcon.classList.remove('fa-moon');
+                    themeIcon.classList.add('fa-sun');
+                    localStorage.setItem('lanword-theme', 'dark');
+                }
+            }
+            
+            applySavedTheme() {
+                const savedTheme = localStorage.getItem('lanword-theme');
+                const themeIcon = this.getElement('theme-icon');
+                
+                if (savedTheme === 'dark') {
+                    document.body.classList.add('dark-mode');
+                    themeIcon.classList.remove('fa-moon');
+                    themeIcon.classList.add('fa-sun');
+                }
+            }
+            
+            showToast(message) {
+                // Create a simple toast notification
+                const toast = document.createElement('div');
+                toast.textContent = message;
+                toast.className = 'toast';
+                
+                document.body.appendChild(toast);
+                
+                setTimeout(() => {
+                    document.body.removeChild(toast);
+                }, 3000);
+            }
+        }
+
+        // Initialize the application when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            try {
+                const documentManager = new DocumentManager();
+                const uiController = new UIController(documentManager);
+                
+                // Make UI controller globally available for debugging
+                window.uiController = uiController;
+                window.documentManager = documentManager;
+                
+                console.log('LanWord Beta 1 initialized successfully');
+            } catch (error) {
+                console.error('Failed to initialize LanWord:', error);
+                alert('Failed to initialize LanWord. Please check the console for details.');
+            }
+        });
+
+    </script>
+</body>
+</html>
